@@ -18,7 +18,7 @@ defmodule PhxAssocTest.ShoppingLists do
 
   """
   def list_lists do
-    Repo.all(List)
+    Repo.all(List) |> Repo.preload(:list_items)
   end
 
   @doc """
@@ -35,7 +35,7 @@ defmodule PhxAssocTest.ShoppingLists do
       ** (Ecto.NoResultsError)
 
   """
-  def get_list!(id), do: Repo.get!(List, id)
+  def get_list!(id), do: Repo.get!(List, id) |> Repo.preload(:list_items)
 
   @doc """
   Creates a list.
@@ -53,6 +53,10 @@ defmodule PhxAssocTest.ShoppingLists do
     %List{}
     |> List.changeset(attrs)
     |> Repo.insert()
+    |> case do
+      {:ok, list} -> {:ok, Repo.preload(list, :list_items)}
+      error -> error
+    end
   end
 
   @doc """
@@ -71,6 +75,10 @@ defmodule PhxAssocTest.ShoppingLists do
     list
     |> List.changeset(attrs)
     |> Repo.update()
+    |> case do
+      {:ok, list} -> {:ok, Repo.preload(list, :list_items)}
+      error -> error
+    end
   end
 
   @doc """

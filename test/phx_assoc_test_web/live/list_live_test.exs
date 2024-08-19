@@ -109,5 +109,26 @@ defmodule PhxAssocTestWeb.ListLiveTest do
       assert html =~ "List updated successfully"
       assert html =~ "some updated title"
     end
+
+    test "adds item to list", %{conn: conn, list: list} do
+      {:ok, show_live, _html} = live(conn, ~p"/lists/#{list}")
+
+      assert show_live |> element("a", "Edit") |> render_click() =~
+               "Edit List"
+
+      assert_patch(show_live, ~p"/lists/#{list}/show/edit")
+
+      updated_attrs =
+        Map.put(@create_attrs, "list_items", %{
+          "0" => %{
+            "count" => "2",
+            "name" => "carrots"
+          }
+        })
+
+      assert show_live
+             |> form("#list-form", list: updated_attrs)
+             |> render_change()
+    end
   end
 end

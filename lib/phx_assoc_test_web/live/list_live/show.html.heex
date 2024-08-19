@@ -10,7 +10,14 @@
 
 <.list>
   <:item title="Title"><%= @list.title %></:item>
+  <:item title="List Items">
+    <%= for list_item <- @list.list_items do %>
+      <p><%= list_item.count %> each, <%= list_item.name %></p>
+    <% end %>
+  </:item>
 </.list>
+
+<pre><%= inspect @list.list_items, pretty: true %></pre>
 
 <.back navigate={~p"/lists"}>Back to lists</.back>
 

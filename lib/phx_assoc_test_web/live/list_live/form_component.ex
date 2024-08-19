@@ -20,6 +20,29 @@ defmodule PhxAssocTestWeb.ListLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:title]} type="text" label="Title" />
+
+        <.button
+          type="button"
+          name="list[list_item_sort][]"
+          value="new"
+          phx-click={JS.dispatch("change")}
+        >
+          add item
+        </.button>
+        <.inputs_for :let={list_item} field={@form[:list_items]}>
+          <input type="hidden" name="list[list_item_sort][]" value={list_item.index} />
+          <.input type="text" field={list_item[:name]} placeholder="item name" label="Name" />
+          <.input type="text" field={list_item[:count]} placeholder="0" label="Count" />
+          <button
+            type="button"
+            name="list[list_item_drop][]"
+            value={list_item.index}
+            phx-click={JS.dispatch("change")}
+          >
+            <.icon name="hero-x-mark" class="w-6 h-6 relative top-2" />
+          </button>
+        </.inputs_for>
+        <input type="hidden" name="list[list_item_drop][]" />
         <:actions>
           <.button phx-disable-with="Saving...">Save List</.button>
         </:actions>
@@ -41,6 +64,7 @@ defmodule PhxAssocTestWeb.ListLive.FormComponent do
   @impl true
   def handle_event("validate", %{"list" => list_params}, socket) do
     changeset = ShoppingLists.change_list(socket.assigns.list, list_params)
+    IO.inspect(list_params)
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
@@ -49,8 +73,11 @@ defmodule PhxAssocTestWeb.ListLive.FormComponent do
   end
 
   defp save_list(socket, :edit, list_params) do
+    IO.puts("HIT THE HANDLER")
+
     case ShoppingLists.update_list(socket.assigns.list, list_params) do
       {:ok, list} ->
+        IO.puts("HIT THE GOOD BRANCH")
         notify_parent({:saved, list})
 
         {:noreply,
@@ -59,6 +86,7 @@ defmodule PhxAssocTestWeb.ListLive.FormComponent do
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
+        IO.inspect(changeset)
         {:noreply, assign(socket, form: to_form(changeset))}
     end
   end
