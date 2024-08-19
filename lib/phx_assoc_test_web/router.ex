@@ -17,6 +17,15 @@ defmodule PhxAssocTestWeb.Router do
   scope "/", PhxAssocTestWeb do
     pipe_through :browser
 
+    live_session :lists do
+      live "/lists", ListLive.Index, :index
+      live "/lists/new", ListLive.Index, :new
+      live "/lists/:id/edit", ListLive.Index, :edit
+
+      live "/lists/:id", ListLive.Show, :show
+      live "/lists/:id/show/edit", ListLive.Show, :edit
+    end
+
     get "/", PageController, :home
   end
 
