@@ -7,12 +7,10 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## The Problem
 
-## Learn more
+There is no clear cut way that I've found to test associations on form data. This repo has 1 failing test pointing to the problem. 
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+So far I've tried how this is set up at `./test/phx_assoc_test_web/live/list_live_test.exs`, as well as various ways of trying to simulate a click to to simulate the for fields on the form. 
+
+What I would like to achieve is to test adding associated data in forms and saving, and then deleting the data. 
